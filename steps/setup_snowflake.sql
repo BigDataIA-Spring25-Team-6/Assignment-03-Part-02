@@ -63,3 +63,12 @@ SHOW DATABASES LIKE 'NOAA_LAB_DB';
 SHOW SCHEMAS IN DATABASE NOAA_LAB_DB;
 SHOW STAGES IN SCHEMA RAW_NOAA;
 SHOW FILE FORMATS IN SCHEMA RAW_NOAA;
+
+-- ----------------------------------------------------------------------------
+-- STEP #8: SQL UDF TO CALCULATE THE AVERAGE TEMPERATURE
+-- ----------------------------------------------------------------------------
+CREATE OR REPLACE FUNCTION ANALYTICS_NOAA.calculate_daily_avg_temperature(tmax_value DOUBLE PRECISION, tmin_value DOUBLE PRECISION)
+RETURNS DOUBLE PRECISION AS
+$$
+    (tmax_value + tmin_value) / 2;
+$$;
