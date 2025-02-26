@@ -56,41 +56,10 @@ CREATE OR REPLACE STAGE RAW_NOAA.NOAA_RAW_STAGE
 URL = 's3://team-6-a3-data-storage/'
 STORAGE_INTEGRATION = MY_S3_INTEGRATION
 FILE_FORMAT = (TYPE = JSON);
-
 -- ----------------------------------------------------------------------------
--- STEP #6: Create Placeholder for Data Harmonization
--- ----------------------------------------------------------------------------
-USE SCHEMA HARMONIZED_NOAA;
-
--- Table for harmonized weather observations
-CREATE OR REPLACE TABLE NOAA_OBSERVATIONS (
-    OBSERVATION_DATE TIMESTAMP_NTZ,
-    DATATYPE VARCHAR,
-    STATION_ID VARCHAR,
-    ATTRIBUTES VARCHAR,
-    OBS_VALUE FLOAT
-);
-
--- Table for harmonized station metadata
-CREATE OR REPLACE TABLE NOAA_STATIONS (
-    STATION_ID VARCHAR PRIMARY KEY,
-    NAME STRING,
-    LATITUDE FLOAT,
-    LONGITUDE FLOAT,
-    ELEVATION FLOAT,
-    ELEVATION_UNIT STRING,
-    MIN_DATE DATE,
-    MAX_DATE DATE,
-    DATA_COVERAGE FLOAT
-);
-
-SHOW TABLES IN SCHEMA HARMONIZED_NOAA;
-
--- ----------------------------------------------------------------------------
--- STEP #7: Confirm Setup is Complete
+-- STEP #4: Confirm Setup is Complete
 -- ----------------------------------------------------------------------------
 SHOW DATABASES LIKE 'NOAA_LAB_DB';
 SHOW SCHEMAS IN DATABASE NOAA_LAB_DB;
 SHOW STAGES IN SCHEMA RAW_NOAA;
 SHOW FILE FORMATS IN SCHEMA RAW_NOAA;
-SHOW TABLES IN SCHEMA HARMONIZED_NOAA;
