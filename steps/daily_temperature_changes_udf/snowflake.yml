@@ -1,0 +1,17 @@
+definition_version: 1
+snowpark:
+  project_name: "NOAA"
+  stage_name: "ANALYTICS_NOAA.TEMP_DEPLOYMENT"
+  src: "daily_temperature_changes_udf/"
+  functions:
+    - name: "daily_temperature_changes_udf"
+      database: "NOAA_LAB_DB"
+      schema: "ANALYTICS_NOAA"
+      handler: "function.main"
+      runtime: "3.10"
+      signature:
+        - name: "TMAX"
+          type: "float"
+        - name: "TMIN"
+          type: "float"
+      returns: float
