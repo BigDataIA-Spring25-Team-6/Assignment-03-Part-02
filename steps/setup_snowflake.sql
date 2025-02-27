@@ -67,8 +67,8 @@ SHOW FILE FORMATS IN SCHEMA RAW_NOAA;
 -- ----------------------------------------------------------------------------
 -- STEP #5: SQL UDF TO CALCULATE THE AVERAGE TEMPERATURE
 -- ----------------------------------------------------------------------------
-CREATE OR REPLACE FUNCTION ANALYTICS_NOAA.calculate_daily_avg_temperature(tmax_value DOUBLE PRECISION, tmin_value DOUBLE PRECISION)
-RETURNS DOUBLE PRECISION AS
+CREATE OR REPLACE FUNCTION ANALYTICS_NOAA.CALCULATE_DAILY_AVG_TEMP(TMAX FLOAT, TMIN FLOAT)
+RETURNS FLOAT AS
 $$
-    (tmax_value + tmin_value) / 2;
+    (TMAX + TMIN) / 2
 $$;

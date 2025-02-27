@@ -1,0 +1,6 @@
+.packages/
+.venv/
+app.zip
+requirements.snowflake.txt
+__pycache__
+daily_temperature_changes_udf.zip
