@@ -1,0 +1,6 @@
+.packages/
+.venv/
+__pycache__/
+app.zip
+requirements.snowflake.txt
+noaa_analytics_update_sp.zip

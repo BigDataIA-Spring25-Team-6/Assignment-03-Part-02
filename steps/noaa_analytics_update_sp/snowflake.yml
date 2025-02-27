@@ -1,0 +1,13 @@
+definition_version: 1
+snowpark:
+  project_name: "noaa_analytics_update_sp"
+  stage_name: "analytics_noaa.deployment2"
+  src: "noaa_analytics_update_sp/"
+  procedures:
+    - name: "noaa_analytics_sp"
+      database: "NOAA_LAB_DB"
+      schema: "ANALYTICS_NOAA"
+      handler: "procedure.main"
+      runtime: "3.10"
+      signature: ""
+      returns: string
