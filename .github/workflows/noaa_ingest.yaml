@@ -57,4 +57,4 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: ${{ secrets.AWS_REGION }}
           S3_BUCKET_NAME: ${{ secrets.S3_BUCKET_NAME }}
-        run: python ingest_data_to_s3.py --start_date $START_DATE --end_date $END_DATE
+        run: python steps/ingest_data_to_s3.py --start_date $START_DATE --end_date $END_DATE
