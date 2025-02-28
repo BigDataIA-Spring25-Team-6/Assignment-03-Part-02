@@ -38,8 +38,8 @@ https://shorturl.at/ir2Rh
 ## Set Up the Environment
 ```
    # clone the environment
-     https://github.com/deodhar-ad/DAMG7245-Assignment-01.git
-     cd DAMG7245-Assignment-01
+     https://github.com/BigDataIA-Spring25-Team-6/Assignment-03-Part-02.git
+     cd DAMG7245-Assignment-03-Part-02
    # add all the environmental variables in .env file
    # add all the secrets for snowflake , api token and AWS in the github secrets
    # enable the github actions to the repository
