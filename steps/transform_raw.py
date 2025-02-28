@@ -40,14 +40,6 @@ def ensure_tables_and_streams(session):
             SHOW_INITIAL_ROWS = FALSE;
         """).collect()
 
-    if "RAW_NOAA_STATION_STREAM" not in existing_streams:
-        print("Creating RAW_NOAA_STATION_STREAM...")
-        session.sql("""
-            CREATE OR REPLACE STREAM RAW_NOAA.RAW_NOAA_STATION_STREAM 
-            ON TABLE RAW_NOAA.RAW_NOAA_STATION_STAGING
-            SHOW_INITIAL_ROWS = FALSE;
-        """).collect()
-
 # ----------------------------------------------------------------------
 # Ensure Harmonized Tables Exist
 # ----------------------------------------------------------------------
@@ -98,15 +90,8 @@ def transform_station_data(session):
     tables = session.sql("SHOW TABLES IN SCHEMA RAW_NOAA").collect()
     for table in tables:
         print(f"Table Found: {table['name']}")
-
-    stream_count = session.sql("SELECT COUNT(*) FROM RAW_NOAA.RAW_NOAA_STATION_STREAM").collect()[0][0]
-    print(f"Number of new records in RAW_NOAA_STATION_STREAM: {stream_count}")
-
-    if stream_count > 0:
-        df_stations_raw = session.table("RAW_NOAA.RAW_NOAA_STATION_STREAM")
-    else:
-        print("No new stream records found. Processing full staging table instead.")
-        df_stations_raw = session.table("RAW_NOAA.RAW_NOAA_STATION_STAGING")
+    
+    df_stations_raw = session.table("RAW_NOAA.RAW_NOAA_STATION_STAGING")
 
     # Debugging: Check if table has data
     row_count = df_stations_raw.count()
@@ -186,15 +171,7 @@ def transform_observation_data(session):
         print(f"Processing {staging_count} records from RAW_NOAA_OBSERVATION_STAGING first.")
         df_obs_raw = session.table("RAW_NOAA.RAW_NOAA_OBSERVATION_STAGING")
     else:
-        print("No unprocessed staging data found. Checking stream for new records.")
-        stream_count = session.sql("SELECT COUNT(*) FROM RAW_NOAA.RAW_NOAA_OBSERVATION_STREAM").collect()[0][0]
-
-        if stream_count > 0:
-            print(f"Processing {stream_count} records from RAW_NOAA_OBSERVATION_STREAM.")
-            df_obs_raw = session.table("RAW_NOAA.RAW_NOAA_OBSERVATION_STREAM")
-        else:
-            print("No new stream records found. Skipping transformation.")
-            return  # Exit only if both staging and stream are empty
+        print("No unprocessed staging data found.")
 
     # Debugging: Check if table has data
     row_count = df_obs_raw.count()
@@ -300,19 +277,7 @@ def pivot_observation_data(session):
             print(f"Processing all {observations_count} records from NOAA_OBSERVATIONS.")
             df_obs = session.table("HARMONIZED_NOAA.NOAA_OBSERVATIONS")
         else:
-            # Check if new records exist in the observation stream
-            stream_count = session.sql("SELECT COUNT(*) FROM RAW_NOAA.RAW_NOAA_OBSERVATION_STREAM").collect()[0][0]
-            print(f"Number of new records in RAW_NOAA_OBSERVATION_STREAM: {stream_count}")
-
-            if stream_count > 0:
-                df_obs = session.table("RAW_NOAA.RAW_NOAA_OBSERVATION_STREAM")  # Process only new data
-            else:
-                print("No new stream records found. Skipping pivot transformation.")
-                return  # Exit only if both staging and stream are empty
-
-    # Debugging: Show raw data before pivoting
-    print("Sample NOAA_OBSERVATIONS data before pivoting:")
-    df_obs.show(10)
+            print("No new records found. Skipping pivot transformation.")
 
     # Filter only TMAX and TMIN data
     df_obs_filtered = df_obs.filter(col("DATATYPE").isin(["TMAX", "TMIN"]))
