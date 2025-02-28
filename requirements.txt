@@ -2,3 +2,4 @@ snowflake-snowpark-python[pandas]
 snowflake-cli-labs
 boto3
 requests
+python-dotenv
