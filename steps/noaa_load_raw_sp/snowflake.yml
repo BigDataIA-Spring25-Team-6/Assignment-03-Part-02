@@ -1,0 +1,13 @@
+definition_version: 1
+snowpark:
+  project_name: "noaa_load_raw_sp"
+  stage_name: "RAW_NOAA.DEPLOYMENT_STAGE"
+  src: "noaa_load_raw_sp/"
+  procedures:
+    - name: "noaa_load_raw_sp"
+      database: "NOAA_LAB_DB"
+      schema: "RAW_NOAA"
+      handler: "procedure.main"
+      runtime: "3.10"
+      signature: ""
+      returns: string
