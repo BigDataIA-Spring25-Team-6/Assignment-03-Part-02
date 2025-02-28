@@ -5,6 +5,7 @@ from datetime import datetime,timedelta
 from dotenv import load_dotenv
 import os
 import time
+import argparse
 
 load_dotenv()
 api_token = os.getenv('NOAA_API_TOKEN')
@@ -131,9 +132,9 @@ def fetch_station_data(station_id):
     print(f"Failed to fetch station data for {station_id} after multiple attempts.")
     return None
 
-def main():
-    overall_start_date = datetime(2020, 1, 1)
-    overall_end_date = datetime.now()
+def main(overall_start_date,overall_end_date):
+    #overall_start_date = datetime(2020, 1, 1)
+    #overall_end_date = datetime.now()
 
     # List to hold all the weather data and set to hold all the unique stations
     all_weather_data = []
@@ -167,7 +168,25 @@ def main():
     station_s3_key = f"station_data.json"
     upload_to_s3(all_station_data,station_s3_key)
 
+def parse_args():
+    parser = argparse.ArgumentParser(description="Fetch weather data with optional dynamic dates")
+    parser.add_argument("--start_date", type=str, required=False, help="Start date in YYYY-MM-DD format")
+    parser.add_argument("--end_date", type=str, required=False, help="End date in YYYY-MM-DD format")
+    return parser.parse_args()
+
 if __name__ == "__main__":
-    main()
+    args = parse_args()
+
+    if args.start_date:
+        overall_start_date = datetime.strptime(args.start_date, "%Y-%m-%d")
+    else:
+        overall_start_date = datetime(2020, 1, 1) 
+    
+    if args.end_date:
+        overall_end_date = datetime.strptime(args.end_date, "%Y-%m-%d")
+    else:
+        overall_end_date = datetime.now()
+
+    main(overall_start_date,overall_end_date)
 
 
