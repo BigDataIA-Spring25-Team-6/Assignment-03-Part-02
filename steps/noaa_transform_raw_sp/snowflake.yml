@@ -1,0 +1,13 @@
+definition_version: 1
+snowpark:
+  project_name: "noaa_transform_raw_sp"
+  stage_name: "HARMONIZED_NOAA.DEPLOYMENT_STAGE"
+  src: "noaa_transform_raw_sp/"
+  procedures:
+    - name: "noaa_transform_raw_sp"
+      database: "NOAA_LAB_DB"
+      schema: "HARMONIZED_NOAA"
+      handler: "procedure.main"
+      runtime: "3.10"
+      signature: ""
+      returns: string

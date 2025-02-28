@@ -32,7 +32,7 @@ def merge_noaa_observations(session):
     df_stream = (
         session.table("RAW_NOAA.RAW_NOAA_OBSERVATION_STREAM")
         .select(
-            F.col("weather_json")["date"].cast("TIMESTAMP_NTZ").alias("OBSERVATION_DATE"),
+            F.col("weather_json")["date"].cast(T.TimestampType()).alias("OBSERVATION_DATE"),
             F.col("weather_json")["datatype"].cast("STRING").alias("DATATYPE"),
             F.col("weather_json")["station"].cast("STRING").alias("STATION_ID"),
             F.col("weather_json")["attributes"].cast("STRING").alias("ATTRIBUTES"),
