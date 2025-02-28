@@ -1,0 +1,65 @@
+name: Deploy NOAA Pipeline
+
+on:
+  push:
+    branches:
+      - dev
+      - main
+  workflow_dispatch:
+
+jobs:
+  deploy_noaa:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install Snowflake CLI & Python Packages
+        run: |
+          pip install -r requirements.txt
+          wget https://sfc-repo.snowflakecomputing.com/snowsql/bootstrap/1.2/linux_x86_64/snowsql-linux_x86_64
+          chmod +x snowsql-linux_x86_64
+          mv snowsql-linux_x86_64 /usr/local/bin/snowsql
+
+      # - name: Upload ZIP files to Snowflake Stage
+      #   env:
+      #     SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
+      #     SNOWFLAKE_USER: ${{ secrets.SNOWFLAKE_USER }}
+      #     SNOWFLAKE_PASSWORD: ${{ secrets.SNOWFLAKE_PASSWORD }}
+      #     SNOWFLAKE_ROLE: ${{ secrets.SNOWFLAKE_ROLE }}
+      #     SNOWFLAKE_WAREHOUSE: ${{ secrets.SNOWFLAKE_WAREHOUSE }}
+      #     SNOWFLAKE_DATABASE: ${{ secrets.SNOWFLAKE_DATABASE }}
+      #     SNOWFLAKE_SCHEMA: ${{ secrets.SNOWFLAKE_SCHEMA }}
+      #   run: |
+      #     ENVIRONMENT=${{ github.ref_name == 'main' && 'PROD' || 'DEV' }}
+
+      #     # Upload ZIP files to Snowflake Stage
+      #     snowsql -a $SNOWFLAKE_ACCOUNT -u $SNOWFLAKE_USER -w NOAA_LAB_WH -d NOAA_LAB_DB -s NOAA_STAGES -q "
+      #       PUT 'file://noaa_load_raw_sp.zip' @NOAA_LAB_DB.${ENVIRONMENT}_NOAA_STAGE AUTO_COMPRESS=FALSE;
+      #       PUT 'file://noaa_transform_raw_sp.zip' @NOAA_LAB_DB.${ENVIRONMENT}_NOAA_STAGE AUTO_COMPRESS=FALSE;
+      #       PUT 'file://noaa_observations_update_sp.zip' @NOAA_LAB_DB.${ENVIRONMENT}_NOAA_STAGE AUTO_COMPRESS=FALSE;
+      #       PUT 'file://noaa_analytics_sp.zip' @NOAA_LAB_DB.${ENVIRONMENT}_NOAA_STAGE AUTO_COMPRESS=FALSE;
+      #     "
+
+      # - name: Deploy NOAA Stored Procedures & Tasks
+      #   env:
+      #     SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
+      #     SNOWFLAKE_USER: ${{ secrets.SNOWFLAKE_USER }}
+      #     SNOWFLAKE_PASSWORD: ${{ secrets.SNOWFLAKE_PASSWORD }}
+      #     SNOWFLAKE_ROLE: ${{ secrets.SNOWFLAKE_ROLE }}
+      #     SNOWFLAKE_WAREHOUSE: ${{ secrets.SNOWFLAKE_WAREHOUSE }}
+      #     SNOWFLAKE_DATABASE: ${{ secrets.SNOWFLAKE_DATABASE }}
+      #     SNOWFLAKE_SCHEMA: ${{ secrets.SNOWFLAKE_SCHEMA }}
+      #   run: |
+      #     ENVIRONMENT=${{ github.ref_name == 'main' && 'PROD' || 'DEV' }}
+
+      #     # Execute the deployment script
+      #     snowsql -a $SNOWFLAKE_ACCOUNT -u $SNOWFLAKE_USER -w NOAA_LAB_WH -d NOAA_LAB_DB -s $ENVIRONMENT_NOAA -q "
+      #     EXECUTE IMMEDIATE FROM @sql/deploy_noaa.sql USING (env => '$ENVIRONMENT');
+      #     "
