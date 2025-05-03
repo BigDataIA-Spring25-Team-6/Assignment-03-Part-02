@@ -1,16 +1,16 @@
 name: NOAA Data Ingestion to S3
  
-on:
-  schedule:
-    - cron: "0 6 * * *"  
-  workflow_dispatch:
-    inputs:
-      start_date:
-        description: 'Start Date (YYYY-MM-DD)'
-        required: false
-      end_date:
-        description: 'End Date (YYYY-MM-DD)'
-        required: false
+# on:
+#   schedule:
+#     - cron: "0 6 * * *"  
+#   workflow_dispatch:
+#     inputs:
+#       start_date:
+#         description: 'Start Date (YYYY-MM-DD)'
+#         required: false
+#       end_date:
+#         description: 'End Date (YYYY-MM-DD)'
+#         required: false
 
  
 jobs:
